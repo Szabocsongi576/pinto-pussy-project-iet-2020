@@ -1,5 +1,7 @@
 lib
 build
+bin
+
 .DS_Store
 
 *.iml
@@ -9,3 +11,8 @@ build
 gradle.properties
 
 .gradle
+.vscode
+.project
+.classpath
+.settings
+.idea
