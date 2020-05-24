@@ -2,8 +2,8 @@ apply plugin: "idea"
 apply plugin: "java"
 apply plugin: "maven"
 
-task wrapper(type: Wrapper) {
-	gradleVersion = '2.0'
+wrapper {
+	gradleVersion = '6.4'
 	distributionUrl = "http://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
 }
 
@@ -64,6 +64,26 @@ dependencies {
 	compile "org.slf4j:slf4j-jdk14:1.7.7"
 
 	testCompile 'junit:junit:4.11'
+
+	testImplementation 'io.cucumber:cucumber-java8:5.6.0'
+	testImplementation 'io.cucumber:cucumber-junit:5.6.0'
+}
+
+configurations {
+	cucumberRuntime {
+		extendsFrom testImplementation
+	}
+}
+
+task cucumber() {
+	dependsOn assemble, compileTestJava
+	doLast {
+		javaexec {
+			main = "io.cucumber.core.cli.Main"
+			classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+			args = ['--plugin', 'pretty', '--glue', 'com.complexible.pinto', 'test/src/com/complexible/pinto/CucumberTests.java']
+		}
+	}
 }
 
 tasks.withType(Test) {
