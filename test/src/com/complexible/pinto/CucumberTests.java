@@ -25,13 +25,19 @@ public class CucumberTests {
         object = Class(className);
     }
 
+    @And("The object name is {string}")
+    public void theObjectNameIs(String name) {
+        object.name  =  name;
+    }
+}
+
     @When("I want to serialize the {string} object to {string}")
     public iWantToSerializeObject(String objectName, String filePath) {
         RDFMapper.writeValue(Class(objectName), filePath);
     }
 
     @When("I want to deserialize the {string} object from {string}")
-    public iWantToSerializeObject(String objectName, String filePath) {
+    public iWantToDeSerializeObject(String objectName, String filePath) {
         return RDFMapper.readValue(Class(objectName), filePath);
     }
 }
