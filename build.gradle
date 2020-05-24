@@ -2,6 +2,11 @@ apply plugin: "idea"
 apply plugin: "java"
 apply plugin: "maven"
 
+task wrapper(type: Wrapper) {
+	gradleVersion = '2.0'
+	distributionUrl = "http://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
+}
+
 sourceSets {
 	main {
 		java {
@@ -40,28 +45,25 @@ repositories {
 }
 
 dependencies {
-	implementation  (group: "com.google.guava", name: "guava", version: "18.0") {
+	compile (group: "com.google.guava", name: "guava", version: "18.0") {
 		exclude group: "com.google.code.findbugs"
 	}
 
-	implementation  "commons-beanutils:commons-beanutils:1.9.2"
-	implementation  "commons-codec:commons-codec:1.10"
+	compile "commons-beanutils:commons-beanutils:1.9.2"
+	compile "commons-codec:commons-codec:1.10"
 
-	implementation  "com.complexible.common:cp-openrdf-utils:4.0.2"
-	implementation  ("com.complexible.common:cp-common-utils:5.0.1") {
+	compile "com.complexible.common:cp-openrdf-utils:4.0.2"
+	compile ("com.complexible.common:cp-common-utils:5.0.1") {
 		exclude group: "org.slf4j"
 	}
 
 	// these should be coming from cp-openrdf-utils, but it's missing these
-	implementation  "org.openrdf.sesame:sesame-rio-ntriples:4.0.0"
+	compile "org.openrdf.sesame:sesame-rio-ntriples:4.0.0"
 
-	implementation  "org.slf4j:slf4j-api:1.7.7"
-	implementation  "org.slf4j:slf4j-jdk14:1.7.7"
+	compile "org.slf4j:slf4j-api:1.7.7"
+	compile "org.slf4j:slf4j-jdk14:1.7.7"
 
-	implementation 'junit:junit:4.11'
-
-	testImplementation 'io.cucumber:cucumber-java8:5.6.0'
-    testImplementation 'io.cucumber:cucumber-junit:5.6.0'
+	testCompile 'junit:junit:4.11'
 }
 
 tasks.withType(Test) {
@@ -75,12 +77,12 @@ configurations {
 }
 
 task cucumber() {
-    dependsOn assemble, compileTestJava
-    doLast {
-        javaexec {
-            main = "io.cucumber.core.cli.Main"
-            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', 'pretty', '--glue', 'com.complexible.pinto.java', 'test/src/com/complexible/pinto/resources']
-        }
-    }
+	dependsOn assemble, compileTestJava
+	doLast {
+		javaexec {
+			main = "io.cucumber.core.cli.Main"
+			classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+			args = ['--plugin', 'pretty', '--glue', 'com.complexible.pinto.java', 'test/src/com/complexible/pinto/resources']
+		}
+	}
 }
